@@ -14,7 +14,7 @@ const Library = () => {
       <header className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-6 py-4">
           <BookOpen className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold tracking-tight text-foreground">My Library</h1>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Afrary</h1>
         </div>
       </header>
 

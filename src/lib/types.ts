@@ -3,6 +3,7 @@ export interface BookMeta {
   title: string;
   author: string;
   filename: string;
+  coverImage?: string; // optional custom cover image path
 }
 
 export interface ReadingProgress {
