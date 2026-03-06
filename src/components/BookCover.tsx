@@ -17,7 +17,15 @@ export function BookCover({ book, onClick, className }: BookCoverProps) {
   const [error, setError] = useState(false);
   const progress = getProgress(book.id);
 
+  // If the book has a custom cover image, skip PDF rendering
+  const hasCustomCover = !!book.coverImage;
+
   useEffect(() => {
+    if (hasCustomCover) {
+      setLoading(false);
+      return;
+    }
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -27,7 +35,7 @@ export function BookCover({ book, onClick, className }: BookCoverProps) {
         setError(true);
         setLoading(false);
       });
-  }, [book]);
+  }, [book, hasCustomCover]);
 
   const progressPercent = progress
     ? Math.round((progress.lastPage / progress.totalPages) * 100)
@@ -42,24 +50,32 @@ export function BookCover({ book, onClick, className }: BookCoverProps) {
       )}
     >
       <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
-        {loading && (
+        {loading && !hasCustomCover && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>
         )}
-        {error && (
+        {error && !hasCustomCover && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4">
             <span className="text-3xl">📖</span>
             <span className="text-xs text-muted-foreground text-center">{book.title}</span>
           </div>
         )}
-        <canvas
-          ref={canvasRef}
-          className={cn(
-            'h-full w-full object-cover transition-opacity',
-            loading || error ? 'opacity-0' : 'opacity-100'
-          )}
-        />
+        {hasCustomCover ? (
+          <img
+            src={book.coverImage}
+            alt={book.title}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <canvas
+            ref={canvasRef}
+            className={cn(
+              'h-full w-full object-cover transition-opacity',
+              loading || error ? 'opacity-0' : 'opacity-100'
+            )}
+          />
+        )}
       </div>
       <div className="flex flex-col gap-1 p-3 text-left">
         <h3 className="text-sm font-semibold text-foreground line-clamp-2 leading-tight">
