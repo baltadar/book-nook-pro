@@ -166,7 +166,8 @@ const Reader = () => {
 
       {/* Canvas area */}
       <div
-        className="relative flex flex-1 items-center justify-center"
+        className="relative flex flex-1 items-center justify-center overflow-hidden"
+        style={{ perspective: '1800px' }}
         onClick={() => setShowControls((s) => !s)}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -177,11 +178,48 @@ const Reader = () => {
           </div>
         )}
 
-        <canvas
-          ref={canvasRef}
-          className="max-h-[calc(100vh-2rem)] max-w-full object-contain transition-all"
-          style={{ filter: getCanvasFilter() }}
-        />
+        <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+          <motion.div
+            key={currentPage}
+            custom={direction}
+            initial={(d: number) => ({
+              rotateY: d > 0 ? 40 : -40,
+              x: d > 0 ? '15%' : '-15%',
+              opacity: 0,
+              scale: 0.95,
+            })}
+            animate={{
+              rotateY: 0,
+              x: 0,
+              opacity: 1,
+              scale: 1,
+            }}
+            exit={(d: number) => ({
+              rotateY: d > 0 ? -40 : 40,
+              x: d > 0 ? '-15%' : '15%',
+              opacity: 0,
+              scale: 0.95,
+            })}
+            transition={{
+              type: 'spring',
+              stiffness: 200,
+              damping: 28,
+              mass: 0.8,
+            }}
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            <canvas
+              ref={canvasRef}
+              className="max-h-[calc(100vh-2rem)] max-w-full object-contain"
+              style={{
+                filter: getCanvasFilter(),
+                backfaceVisibility: 'hidden',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
+                borderRadius: '4px',
+              }}
+            />
+          </motion.div>
+        </AnimatePresence>
 
         {/* Side nav buttons */}
         <AnimatePresence>
