@@ -9,6 +9,27 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const pageVariants = {
+  enter: (d: number) => ({
+    rotateY: d > 0 ? 40 : -40,
+    x: d > 0 ? '15%' : '-15%',
+    opacity: 0,
+    scale: 0.95,
+  }),
+  center: {
+    rotateY: 0,
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+  exit: (d: number) => ({
+    rotateY: d > 0 ? -40 : 40,
+    x: d > 0 ? '-15%' : '15%',
+    opacity: 0,
+    scale: 0.95,
+  }),
+};
+
 const Reader = () => {
   const { bookId } = useParams<{ bookId: string }>();
   const navigate = useNavigate();
