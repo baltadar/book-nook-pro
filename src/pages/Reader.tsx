@@ -187,7 +187,7 @@ const Reader = () => {
 
       {/* Canvas area */}
       <div
-        className="relative flex flex-1 items-center justify-center overflow-hidden"
+        className="relative flex flex-1 items-center justify-center overflow-hidden pt-14 pb-4"
         style={{ perspective: '1800px' }}
         onClick={() => setShowControls((s) => !s)}
         onTouchStart={handleTouchStart}
