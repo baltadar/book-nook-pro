@@ -5,7 +5,7 @@ const THEME_KEY = 'ebook-reader-theme';
 
 export function useReaderTheme() {
   const [theme, setTheme] = useState<ReaderTheme>(() => {
-    return (localStorage.getItem(THEME_KEY) as ReaderTheme) || 'light';
+    return (localStorage.getItem(THEME_KEY) as ReaderTheme) || 'sepia';
   });
 
   useEffect(() => {
