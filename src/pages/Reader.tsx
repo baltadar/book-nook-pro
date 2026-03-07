@@ -187,7 +187,7 @@ const Reader = () => {
 
       {/* Canvas area */}
       <div
-        className="relative flex flex-1 items-center justify-center overflow-hidden"
+        className="relative flex flex-1 items-center justify-center overflow-hidden pt-14 pb-4"
         style={{ perspective: '1800px' }}
         onClick={() => setShowControls((s) => !s)}
         onTouchStart={handleTouchStart}
@@ -217,7 +217,7 @@ const Reader = () => {
           >
             <canvas
               ref={canvasRef}
-              className="max-h-[calc(100vh-2rem)] max-w-full object-contain"
+              className="max-h-[calc(100vh-5rem)] max-w-full object-contain"
               style={{
                 filter: getCanvasFilter(),
                 backfaceVisibility: 'hidden',
