@@ -203,24 +203,10 @@ const Reader = () => {
           <motion.div
             key={currentPage}
             custom={direction}
-            initial={(d: number) => ({
-              rotateY: d > 0 ? 40 : -40,
-              x: d > 0 ? '15%' : '-15%',
-              opacity: 0,
-              scale: 0.95,
-            })}
-            animate={{
-              rotateY: 0,
-              x: 0,
-              opacity: 1,
-              scale: 1,
-            }}
-            exit={(d: number) => ({
-              rotateY: d > 0 ? -40 : 40,
-              x: d > 0 ? '-15%' : '15%',
-              opacity: 0,
-              scale: 0.95,
-            })}
+            variants={pageVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
             transition={{
               type: 'spring',
               stiffness: 200,
