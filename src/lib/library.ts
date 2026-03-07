@@ -16,9 +16,9 @@ function toFilename(author: string, title: string): string {
 
 // Raw book data from the African Literature collection
 const rawBooks: Array<{ author: string; title: string; coverImage?: string }> = [
-  { author: 'Agnes Sam', title: 'Jesus Is Indian and Other Stories' },
-  { author: 'Ahmadou Kourouma', title: 'The Suns of Independence' },
-  { author: 'Albert W. Kayper-Mensah', title: 'The Drummer in Our Time: Poems' },
+  { author: 'Agnes Sam', title: 'Jesus Is Indian and Other Stories', coverImage: '/covers/jesus-is-indian.png' },
+  { author: 'Ahmadou Kourouma', title: 'The Suns of Independence', coverImage: '/covers/the-suns-of-independence.png' },
+  { author: 'Albert W. Kayper-Mensah', title: 'The Drummer in Our Time Poems', coverImage: '/covers/the-drummer-in-our-time.png' },
   { author: 'Alex La Guma', title: 'A Walk in the Night and other Stories', coverImage: '/covers/a-walk-in-the-night.png' },
   { author: 'Alex La Guma', title: 'In the Fog of the Seasons\' End' },
   { author: 'Alex La Guma', title: 'Time of the Butcherbird' },
