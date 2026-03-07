@@ -19,7 +19,7 @@ const rawBooks: Array<{ author: string; title: string; coverImage?: string }> = 
   { author: 'Agnes Sam', title: 'Jesus Is Indian and Other Stories' },
   { author: 'Ahmadou Kourouma', title: 'The Suns of Independence' },
   { author: 'Albert W. Kayper-Mensah', title: 'The Drummer in Our Time: Poems' },
-  { author: 'Alex La Guma', title: 'A Walk in the Night and Other Stories', coverImage: '/covers/a-walk-in-the-night.png' },
+  { author: 'Alex La Guma', title: 'A Walk in the Night and other Stories', coverImage: '/covers/a-walk-in-the-night.png' },
   { author: 'Alex La Guma', title: 'In the Fog of the Seasons\' End' },
   { author: 'Alex La Guma', title: 'Time of the Butcherbird' },
   { author: 'Ali Jahadmy & Ali Ahmed Jahadhmy & Ali Jahadhmy', title: 'Anthology of Swahili Poetry' },
