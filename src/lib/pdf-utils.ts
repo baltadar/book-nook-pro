@@ -1,7 +1,20 @@
 import * as pdfjsLib from 'pdfjs-dist';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 // Set the worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+
+// Cache loaded PDF documents by URL
+const pdfCache = new Map<string, PDFDocumentProxy>();
+
+async function getCachedDocument(url: string): Promise<PDFDocumentProxy> {
+  const cached = pdfCache.get(url);
+  if (cached) return cached;
+
+  const pdf = await pdfjsLib.getDocument(url).promise;
+  pdfCache.set(url, pdf);
+  return pdf;
+}
 
 export async function renderPdfPage(
   url: string,
@@ -9,7 +22,7 @@ export async function renderPdfPage(
   canvas: HTMLCanvasElement,
   scale: number = 1.5
 ): Promise<number> {
-  const pdf = await pdfjsLib.getDocument(url).promise;
+  const pdf = await getCachedDocument(url);
   const page = await pdf.getPage(pageNum);
   const viewport = page.getViewport({ scale });
 
@@ -27,7 +40,7 @@ export async function renderCoverThumbnail(
   canvas: HTMLCanvasElement,
   maxWidth: number = 300
 ): Promise<void> {
-  const pdf = await pdfjsLib.getDocument(url).promise;
+  const pdf = await getCachedDocument(url);
   const page = await pdf.getPage(1);
   const unscaledViewport = page.getViewport({ scale: 1 });
   const scale = maxWidth / unscaledViewport.width;
@@ -41,6 +54,6 @@ export async function renderCoverThumbnail(
 }
 
 export async function getPdfPageCount(url: string): Promise<number> {
-  const pdf = await pdfjsLib.getDocument(url).promise;
+  const pdf = await getCachedDocument(url);
   return pdf.numPages;
 }
