@@ -217,7 +217,7 @@ const Reader = () => {
           >
             <canvas
               ref={canvasRef}
-              className="max-h-[calc(100vh-2rem)] max-w-full object-contain"
+              className="max-h-[calc(100vh-5rem)] max-w-full object-contain"
               style={{
                 filter: getCanvasFilter(),
                 backfaceVisibility: 'hidden',
