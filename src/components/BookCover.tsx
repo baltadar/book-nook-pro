@@ -13,29 +13,35 @@ interface BookCoverProps {
 
 export function BookCover({ book, onClick, className }: BookCoverProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [visible, setVisible] = useState(false);
   const progress = getProgress(book.id);
 
-  // If the book has a custom cover image, skip PDF rendering
   const hasCustomCover = !!book.coverImage;
 
+  // Lazy visibility detection for PDF covers
   useEffect(() => {
-    if (hasCustomCover) {
-      setLoading(false);
-      return;
-    }
+    if (hasCustomCover) return;
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasCustomCover]);
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+  useEffect(() => {
+    if (hasCustomCover) { setLoading(false); return; }
+    if (!visible || !canvasRef.current) return;
 
-    renderCoverThumbnail(getBookUrl(book), canvas, 280)
+    renderCoverThumbnail(getBookUrl(book), canvasRef.current, 280)
       .then(() => setLoading(false))
-      .catch(() => {
-        setError(true);
-        setLoading(false);
-      });
-  }, [book, hasCustomCover]);
+      .catch(() => { setError(true); setLoading(false); });
+  }, [book, hasCustomCover, visible]);
 
   const progressPercent = progress
     ? Math.round((progress.lastPage / progress.totalPages) * 100)
@@ -49,10 +55,11 @@ export function BookCover({ book, onClick, className }: BookCoverProps) {
         className
       )}
     >
-      <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
+      <div ref={containerRef} className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
         {loading && !hasCustomCover && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4">
+            <span className="text-3xl">📖</span>
+            <span className="text-xs text-muted-foreground text-center line-clamp-2">{book.title}</span>
           </div>
         )}
         {error && !hasCustomCover && (
@@ -65,6 +72,7 @@ export function BookCover({ book, onClick, className }: BookCoverProps) {
           <img
             src={book.coverImage}
             alt={book.title}
+            loading="lazy"
             className="h-full w-full object-cover"
           />
         ) : (
