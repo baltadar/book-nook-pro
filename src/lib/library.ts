@@ -1,5 +1,7 @@
 import { BookMeta } from './types';
 
+const R2_BASE = 'https://pub-53f9bd2475cc48ccbcb450df64234f24.r2.dev';
+
 function slugify(text: string): string {
   return text
     .toLowerCase()
