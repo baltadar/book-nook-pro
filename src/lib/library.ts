@@ -16,6 +16,13 @@ function toFilename(author: string, title: string): string {
   return `${a}_-_${t}.pdf`;
 }
 
+function toCoverFilename(author: string, title: string): string {
+  // Matches R2 naming: "Author - Title.jpg" with underscores replaced by spaces
+  const a = author.split('&')[0].trim();
+  const t = title.replace(/[^a-zA-Z0-9 ]/g, '');
+  return `${a} - ${t}.jpg`;
+}
+
 // Raw book data from the African Literature collection
 const rawBooks: Array<{ author: string; title: string; coverImage?: string }> = [
   { author: 'Agnes Sam', title: 'Jesus Is Indian and Other Stories', coverImage: `${R2_BASE}/covers/jesus-is-indian.png` },
