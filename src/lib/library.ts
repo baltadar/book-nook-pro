@@ -275,5 +275,5 @@ export function getBookById(id: string): BookMeta | undefined {
 }
 
 export function getBookUrl(book: BookMeta): string {
-  return `/books/${book.filename}`;
+  return `${R2_BASE}/afrary/${book.filename}`;
 }
