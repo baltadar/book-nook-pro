@@ -17,9 +17,9 @@ function toFilename(author: string, title: string): string {
 }
 
 function toCoverFilename(author: string, title: string): string {
-  // Matches R2 naming: "Author - Title.jpg" with underscores replaced by spaces
-  const a = author.split('&')[0].trim();
-  const t = title.replace(/[^a-zA-Z0-9 ]/g, '');
+  // Matches R2 naming: "Author - Title.jpg" with special chars like ' : replaced by _
+  const a = author.split('&')[0].trim().replace(/[''`:]/g, '_');
+  const t = title.replace(/[''`:]/g, '_');
   return `${a} - ${t}.jpg`;
 }
 
