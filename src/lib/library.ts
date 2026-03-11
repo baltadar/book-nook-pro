@@ -260,7 +260,7 @@ const library: BookMeta[] = rawBooks.map((b) => ({
   title: b.title,
   author: b.author,
   filename: toFilename(b.author, b.title),
-  coverImage: `${R2_BASE}/afrary/covers/${encodeURIComponent(toCoverFilename(b.author, b.title))}`,
+  coverImage: `${SUPABASE_STORAGE}/covers/${encodeURIComponent(toCoverFilename(b.author, b.title))}`,
 }));
 
 // Handle duplicate IDs by appending index
