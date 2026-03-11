@@ -1,6 +1,6 @@
 import { BookMeta } from './types';
 
-const R2_BASE = 'https://pub-53f9bd2475cc48ccbcb450df64234f24.r2.dev';
+const SUPABASE_STORAGE = 'https://cqwxtijutjgzkbdkwqqw.supabase.co/storage/v1/object/public';
 
 function slugify(text: string): string {
   return text
@@ -260,7 +260,7 @@ const library: BookMeta[] = rawBooks.map((b) => ({
   title: b.title,
   author: b.author,
   filename: toFilename(b.author, b.title),
-  coverImage: `${R2_BASE}/afrary/covers/${encodeURIComponent(toCoverFilename(b.author, b.title))}`,
+  coverImage: `${SUPABASE_STORAGE}/covers/${encodeURIComponent(toCoverFilename(b.author, b.title))}`,
 }));
 
 // Handle duplicate IDs by appending index
@@ -282,5 +282,5 @@ export function getBookById(id: string): BookMeta | undefined {
 }
 
 export function getBookUrl(book: BookMeta): string {
-  return `${R2_BASE}/afrary/${book.filename}`;
+  return `${SUPABASE_STORAGE}/books/${book.filename}`;
 }
