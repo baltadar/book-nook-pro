@@ -256,8 +256,8 @@ const library: BookMeta[] = rawBooks.map((b) => ({
   id: slugify(b.title),
   title: b.title,
   author: b.author,
-  filename: toFilename(b.author, b.title),
-  coverImage: `${SUPABASE_STORAGE}/covers/${encodeURIComponent(toCoverFilename(b.author, b.title))}`,
+  filename: toStorageName(b.author, b.title, '.pdf'),
+  coverImage: `${SUPABASE_STORAGE}/covers/${toStorageName(b.author, b.title, '.jpg')}`,
 }));
 
 // Handle duplicate IDs by appending index
