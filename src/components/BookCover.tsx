@@ -1,7 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
 import { BookMeta } from '@/lib/types';
-import { renderCoverThumbnail } from '@/lib/pdf-utils';
-import { getBookUrl } from '@/lib/library';
 import { getProgress } from '@/lib/storage';
 import { cn } from '@/lib/utils';
 
@@ -12,36 +9,7 @@ interface BookCoverProps {
 }
 
 export function BookCover({ book, onClick, className }: BookCoverProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [visible, setVisible] = useState(false);
   const progress = getProgress(book.id);
-
-  const hasCustomCover = !!book.coverImage;
-
-  // Lazy visibility detection for PDF covers
-  useEffect(() => {
-    if (hasCustomCover) return;
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { rootMargin: '200px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [hasCustomCover]);
-
-  useEffect(() => {
-    if (hasCustomCover) { setLoading(false); return; }
-    if (!visible || !canvasRef.current) return;
-
-    renderCoverThumbnail(getBookUrl(book), canvasRef.current, 280)
-      .then(() => setLoading(false))
-      .catch(() => { setError(true); setLoading(false); });
-  }, [book, hasCustomCover, visible]);
 
   const progressPercent = progress
     ? Math.round((progress.lastPage / progress.totalPages) * 100)
@@ -55,34 +23,20 @@ export function BookCover({ book, onClick, className }: BookCoverProps) {
         className
       )}
     >
-      <div ref={containerRef} className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
-        {loading && !hasCustomCover && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4">
-            <span className="text-3xl">📖</span>
-            <span className="text-xs text-muted-foreground text-center line-clamp-2">{book.title}</span>
-          </div>
-        )}
-        {error && !hasCustomCover && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4">
-            <span className="text-3xl">📖</span>
-            <span className="text-xs text-muted-foreground text-center">{book.title}</span>
-          </div>
-        )}
-        {hasCustomCover ? (
+      <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
+        {book.coverImage ? (
           <img
             src={book.coverImage}
             alt={book.title}
             loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
           />
         ) : (
-          <canvas
-            ref={canvasRef}
-            className={cn(
-              'h-full w-full object-cover transition-opacity',
-              loading || error ? 'opacity-0' : 'opacity-100'
-            )}
-          />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4">
+            <span className="text-3xl">📖</span>
+            <span className="text-xs text-muted-foreground text-center line-clamp-2">{book.title}</span>
+          </div>
         )}
       </div>
       <div className="flex flex-col gap-1 p-3 text-left">
