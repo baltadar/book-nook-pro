@@ -10,17 +10,14 @@ function slugify(text: string): string {
     .slice(0, 80);
 }
 
-function toFilename(author: string, title: string): string {
-  const a = author.split('&')[0].trim().replace(/\s+/g, '_');
-  const t = title.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-  return `${a}_-_${t}.pdf`;
-}
-
-function toCoverFilename(author: string, title: string): string {
-  // Matches R2 naming: "Author - Title.jpg" with special chars like ' : replaced by _
-  const a = author.split('&')[0].trim().replace(/[''`:]/g, '_');
-  const t = title.replace(/[''`:]/g, '_');
-  return `${a} - ${t}.jpg`;
+function toStorageName(author: string, title: string, ext: string): string {
+  const raw = `${author.split('&')[0].trim()}-${title}`;
+  return raw
+    .toLowerCase()
+    .replace(/[''`]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    + ext;
 }
 
 // Raw book data from the African Literature collection
@@ -259,8 +256,8 @@ const library: BookMeta[] = rawBooks.map((b) => ({
   id: slugify(b.title),
   title: b.title,
   author: b.author,
-  filename: toFilename(b.author, b.title),
-  coverImage: `${SUPABASE_STORAGE}/covers/${encodeURIComponent(toCoverFilename(b.author, b.title))}`,
+  filename: toStorageName(b.author, b.title, '.pdf'),
+  coverImage: `${SUPABASE_STORAGE}/covers/${toStorageName(b.author, b.title, '.jpg')}`,
 }));
 
 // Handle duplicate IDs by appending index
