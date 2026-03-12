@@ -10,17 +10,14 @@ function slugify(text: string): string {
     .slice(0, 80);
 }
 
-function toFilename(author: string, title: string): string {
-  const a = author.split('&')[0].trim().replace(/\s+/g, '_');
-  const t = title.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-  return `${a}_-_${t}.pdf`;
-}
-
-function toCoverFilename(author: string, title: string): string {
-  // Matches R2 naming: "Author - Title.jpg" with special chars like ' : replaced by _
-  const a = author.split('&')[0].trim().replace(/[''`:]/g, '_');
-  const t = title.replace(/[''`:]/g, '_');
-  return `${a} - ${t}.jpg`;
+function toStorageName(author: string, title: string, ext: string): string {
+  const raw = `${author.split('&')[0].trim()}-${title}`;
+  return raw
+    .toLowerCase()
+    .replace(/[''`]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    + ext;
 }
 
 // Raw book data from the African Literature collection
