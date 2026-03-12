@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BookMeta } from '@/lib/types';
 import { getProgress } from '@/lib/storage';
 import { cn } from '@/lib/utils';
@@ -6,10 +7,12 @@ interface BookCoverProps {
   book: BookMeta;
   onClick: () => void;
   className?: string;
+  priority?: boolean;
 }
 
-export function BookCover({ book, onClick, className }: BookCoverProps) {
+export function BookCover({ book, onClick, className, priority = false }: BookCoverProps) {
   const progress = getProgress(book.id);
+  const [loaded, setLoaded] = useState(false);
 
   const progressPercent = progress
     ? Math.round((progress.lastPage / progress.totalPages) * 100)
@@ -25,13 +28,23 @@ export function BookCover({ book, onClick, className }: BookCoverProps) {
     >
       <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
         {book.coverImage ? (
-          <img
-            src={book.coverImage}
-            alt={book.title}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover"
-          />
+          <>
+            {!loaded && (
+              <div className="absolute inset-0 animate-pulse bg-muted" />
+            )}
+            <img
+              src={book.coverImage}
+              alt={book.title}
+              loading={priority ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchPriority={priority ? 'high' : 'low'}
+              onLoad={() => setLoaded(true)}
+              className={cn(
+                'h-full w-full object-cover transition-opacity duration-300',
+                loaded ? 'opacity-100' : 'opacity-0'
+              )}
+            />
+          </>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4">
             <span className="text-3xl">📖</span>
