@@ -11,7 +11,7 @@ const Library = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-6 py-4">
+        <div className="mx-auto flex max-w-5xl items-baseline gap-3 px-6 py-4">
           <h1 className="text-xl font-bold tracking-tight text-foreground">Afrary</h1>
           <span className="text-[8px] italic text-primary/70 tracking-wide font-medium">
             The Full Collection of the African Writers Series
