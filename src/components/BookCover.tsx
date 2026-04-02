@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { BookMeta } from '@/lib/types';
 import { getProgress } from '@/lib/storage';
 import { cn } from '@/lib/utils';
@@ -10,7 +10,7 @@ interface BookCoverProps {
   priority?: boolean;
 }
 
-export function BookCover({ book, onClick, className, priority = false }: BookCoverProps) {
+export const BookCover = memo(function BookCover({ book, onClick, className, priority = false }: BookCoverProps) {
   const progress = getProgress(book.id);
   const [loaded, setLoaded] = useState(false);
 
@@ -25,6 +25,7 @@ export function BookCover({ book, onClick, className, priority = false }: BookCo
         'group relative flex flex-col overflow-hidden rounded-xl border border-border/50 bg-card shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-primary/40',
         className
       )}
+      style={{ contain: 'layout style paint' }}
     >
       <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
         {book.coverImage ? (
@@ -71,4 +72,4 @@ export function BookCover({ book, onClick, className, priority = false }: BookCo
       </div>
     </button>
   );
-}
+});

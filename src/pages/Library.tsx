@@ -1,15 +1,18 @@
 import { useNavigate } from 'react-router-dom';
+import { useMemo, useCallback } from 'react';
 import { getLibrary } from '@/lib/library';
 import { BookCover } from '@/components/BookCover';
 import { ContinueReading } from '@/components/ContinueReading';
 
 const Library = () => {
   const navigate = useNavigate();
-  const books = getLibrary();
+  const books = useMemo(() => getLibrary(), []);
+  const handleBookClick = useCallback((id: string) => {
+    navigate(`/read/${id}`);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-baseline gap-3 px-6 py-4">
           <h1 className="text-xl font-bold tracking-tight text-foreground">Afrary</h1>
@@ -31,12 +34,12 @@ const Library = () => {
             <h3 className="text-lg font-medium text-muted-foreground">No books yet</h3>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5" style={{ contain: 'layout style' }}>
             {books.map((book, i) => (
               <BookCover
                 key={book.id}
                 book={book}
-                onClick={() => navigate(`/read/${book.id}`)}
+                onClick={() => handleBookClick(book.id)}
                 priority={i < 10}
               />
             ))}
