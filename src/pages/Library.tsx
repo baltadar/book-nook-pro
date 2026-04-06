@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { Download } from 'lucide-react';
 import { useMemo, useCallback } from 'react';
 import { getLibrary } from '@/lib/library';
 import { BookCover } from '@/components/BookCover';
