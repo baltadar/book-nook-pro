@@ -23,8 +23,9 @@ const Library = () => {
             </span>
           </div>
           <a
-            href="/afrary.apk"
-            download
+            href="https://github.com/baltadar/book-nook-pro/releases/download/v1.0.0/app-debug.apk"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/85"
           >
             <Download className="h-3.5 w-3.5" />
