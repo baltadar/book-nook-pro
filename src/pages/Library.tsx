@@ -25,7 +25,7 @@ const Library = () => {
           <a
             href="/afrary.apk"
             download
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1.5 text-xs font-medium text-foreground/80 shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/85"
           >
             <Download className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Download App</span>
