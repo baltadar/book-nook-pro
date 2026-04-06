@@ -15,11 +15,22 @@ const Library = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl items-baseline gap-3 px-6 py-4">
-          <h1 className="text-xl font-bold tracking-tight text-foreground">Afrary</h1>
-          <span className="text-[8px] italic tracking-wide font-medium" style={{ color: 'hsl(var(--sepia-text))' }}>
-            The Full Collection of the African Writers Series
-          </span>
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+          <div className="flex items-baseline gap-3">
+            <h1 className="text-xl font-bold tracking-tight text-foreground">Afrary</h1>
+            <span className="text-[8px] italic tracking-wide font-medium" style={{ color: 'hsl(var(--sepia-text))' }}>
+              The Full Collection of the African Writers Series
+            </span>
+          </div>
+          <a
+            href="/afrary.apk"
+            download
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1.5 text-xs font-medium text-foreground/80 shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Download App</span>
+            <span className="sm:hidden">App</span>
+          </a>
         </div>
       </header>
 
