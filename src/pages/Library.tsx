@@ -14,14 +14,15 @@ const Library = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <div className="w-full border-b border-border/30 py-2.5" style={{ backgroundColor: 'hsl(var(--sepia-bg, 45 30% 96%))' }}>
+        <p className="text-center text-xs font-medium tracking-widest uppercase" style={{ color: 'hsl(var(--sepia-text))' }}>
+          The Full Collection of the African Writers Series
+        </p>
+      </div>
+
       <header className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <div className="flex items-baseline gap-3">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">Afrary</h1>
-            <span className="text-[8px] italic tracking-wide font-medium" style={{ color: 'hsl(var(--sepia-text))' }}>
-              The Full Collection of the African Writers Series
-            </span>
-          </div>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Afrary</h1>
           <a
             href="https://github.com/baltadar/book-nook-pro/releases/download/v1.0.0/app-debug.apk"
             target="_blank"
