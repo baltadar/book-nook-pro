@@ -1,10 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { getBookById } from '@/lib/library';
+import { trackBookOpened } from '@/lib/storage';
 import { useReaderTheme } from '@/hooks/use-reader-theme';
 import { ReaderSettings } from '@/components/ReaderSettings';
 import { ArrowLeft, Download, ExternalLink, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Reader = () => {
   const { bookId } = useParams<{ bookId: string }>();
@@ -12,6 +13,10 @@ const Reader = () => {
   const book = bookId ? getBookById(bookId) : null;
   const [showSettings, setShowSettings] = useState(false);
   const { theme, setTheme, getBgColor, getTextColor } = useReaderTheme();
+
+  useEffect(() => {
+    if (bookId) trackBookOpened(bookId);
+  }, [bookId]);
 
   if (!book) {
     return (
