@@ -1,13 +1,26 @@
 import { useNavigate } from 'react-router-dom';
-import { Download } from 'lucide-react';
-import { useMemo, useCallback } from 'react';
+import { Download, Search, X } from 'lucide-react';
+import { useState, useMemo, useCallback } from 'react';
 import { getLibrary } from '@/lib/library';
 import { BookCover } from '@/components/BookCover';
 import { ContinueReading } from '@/components/ContinueReading';
 
 const Library = () => {
   const navigate = useNavigate();
-  const books = useMemo(() => getLibrary(), []);
+  const allBooks = useMemo(() => getLibrary(), []);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterBy, setFilterBy] = useState<'all' | 'title' | 'author'>('all');
+
+  const books = useMemo(() => {
+    if (!searchQuery.trim()) return allBooks;
+    const q = searchQuery.toLowerCase();
+    return allBooks.filter((book) => {
+      if (filterBy === 'title') return book.title.toLowerCase().includes(q);
+      if (filterBy === 'author') return book.author.toLowerCase().includes(q);
+      return book.title.toLowerCase().includes(q) || book.author.toLowerCase().includes(q);
+    });
+  }, [allBooks, searchQuery, filterBy]);
+
   const handleBookClick = useCallback((id: string) => {
     navigate(`/read/${id}`);
   }, [navigate]);
@@ -39,13 +52,57 @@ const Library = () => {
       <main className="mx-auto max-w-5xl px-6 py-8">
         <ContinueReading />
 
+        {/* Search & Filter */}
+        <div className="mb-6 space-y-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by title or author..."
+              className="w-full rounded-lg border border-border bg-background py-2.5 pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {(['all', 'title', 'author'] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilterBy(f)}
+                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                  filterBy === f
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                }`}
+              >
+                {f === 'all' ? 'All' : f === 'title' ? 'Title' : 'Author'}
+              </button>
+            ))}
+            {searchQuery && (
+              <span className="ml-auto text-xs text-muted-foreground">
+                {books.length} result{books.length !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+        </div>
+
         <h2 className="mb-4 text-lg font-semibold text-foreground/80 tracking-tight">
-          All Books
+          {searchQuery ? 'Search Results' : 'All Books'}
         </h2>
 
         {books.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <h3 className="text-lg font-medium text-muted-foreground">No books yet</h3>
+            <h3 className="text-lg font-medium text-muted-foreground">
+              {searchQuery ? `No books found for "${searchQuery}"` : 'No books yet'}
+            </h3>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5" style={{ contain: 'layout style' }}>
