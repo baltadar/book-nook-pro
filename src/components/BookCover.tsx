@@ -1,6 +1,5 @@
 import { memo, useState } from 'react';
 import { BookMeta } from '@/lib/types';
-import { getProgress } from '@/lib/storage';
 import { cn } from '@/lib/utils';
 
 interface BookCoverProps {
@@ -11,12 +10,7 @@ interface BookCoverProps {
 }
 
 export const BookCover = memo(function BookCover({ book, onClick, className, priority = false }: BookCoverProps) {
-  const progress = getProgress(book.id);
   const [loaded, setLoaded] = useState(false);
-
-  const progressPercent = progress
-    ? Math.round((progress.lastPage / progress.totalPages) * 100)
-    : 0;
 
   return (
     <button
@@ -58,17 +52,6 @@ export const BookCover = memo(function BookCover({ book, onClick, className, pri
           {book.title}
         </h3>
         <p className="text-xs text-muted-foreground">{book.author}</p>
-        {progressPercent > 0 && (
-          <div className="mt-1.5 flex items-center gap-2">
-            <div className="h-1 flex-1 rounded-full bg-muted">
-              <div
-                className="h-full rounded-full bg-primary/70 transition-all"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-            <span className="text-[10px] text-muted-foreground">{progressPercent}%</span>
-          </div>
-        )}
       </div>
     </button>
   );

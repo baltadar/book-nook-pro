@@ -1,29 +1,28 @@
-import { ReadingProgress } from './types';
+const HISTORY_KEY = 'ebook-reader-history';
+const MAX_HISTORY = 5;
 
-const PROGRESS_KEY = 'ebook-reader-progress';
+export interface ReadingHistoryEntry {
+  bookId: string;
+  lastOpened: number; // timestamp
+}
 
-export function getAllProgress(): Record<string, ReadingProgress> {
+export function getReadingHistory(): ReadingHistoryEntry[] {
   try {
-    const data = localStorage.getItem(PROGRESS_KEY);
-    return data ? JSON.parse(data) : {};
+    const data = localStorage.getItem(HISTORY_KEY);
+    return data ? JSON.parse(data) : [];
   } catch {
-    return {};
+    return [];
   }
 }
 
-export function getProgress(bookId: string): ReadingProgress | null {
-  return getAllProgress()[bookId] || null;
+export function trackBookOpened(bookId: string): void {
+  let history = getReadingHistory().filter((e) => e.bookId !== bookId);
+  history.unshift({ bookId, lastOpened: Date.now() });
+  history = history.slice(0, MAX_HISTORY);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
 }
 
-export function saveProgress(progress: ReadingProgress): void {
-  const all = getAllProgress();
-  all[progress.bookId] = { ...progress, lastRead: Date.now() };
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify(all));
-}
-
-export function getLastReadBook(): ReadingProgress | null {
-  const all = getAllProgress();
-  const entries = Object.values(all);
-  if (entries.length === 0) return null;
-  return entries.reduce((a, b) => (a.lastRead > b.lastRead ? a : b));
+export function removeFromHistory(bookId: string): void {
+  const history = getReadingHistory().filter((e) => e.bookId !== bookId);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
 }

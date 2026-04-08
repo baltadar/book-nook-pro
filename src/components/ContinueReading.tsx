@@ -1,49 +1,59 @@
-import { getLastReadBook } from '@/lib/storage';
+import { getReadingHistory, removeFromHistory } from '@/lib/storage';
 import { getBookById } from '@/lib/library';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, X } from 'lucide-react';
+import { useState } from 'react';
 
 export function ContinueReading() {
-  const lastProgress = getLastReadBook();
-  const book = lastProgress ? getBookById(lastProgress.bookId) : null;
   const navigate = useNavigate();
+  const [history, setHistory] = useState(() => getReadingHistory());
 
-  if (!book || !lastProgress) return null;
+  const entries = history
+    .map((e) => ({ entry: e, book: getBookById(e.bookId) }))
+    .filter((x) => x.book != null);
 
-  const percent = Math.round((lastProgress.lastPage / lastProgress.totalPages) * 100);
+  if (entries.length === 0) return null;
+
+  const handleRemove = (bookId: string, ev: React.MouseEvent) => {
+    ev.stopPropagation();
+    removeFromHistory(bookId);
+    setHistory(getReadingHistory());
+  };
 
   return (
     <div className="mb-8">
       <h2 className="mb-3 text-lg font-semibold text-foreground/80 tracking-tight">
         Continue Reading
       </h2>
-      <button
-        onClick={() => navigate(`/read/${book.id}`)}
-        className="flex w-full items-center gap-4 rounded-2xl border border-border/50 bg-card p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/20"
-      >
-        <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
-          {book.coverImage && (
-            <img src={book.coverImage} alt={book.title} className="h-full w-full object-cover" />
-          )}
-        </div>
-        <div className="flex flex-1 flex-col items-start gap-1.5 text-left">
-          <h3 className="text-base font-semibold text-foreground">{book.title}</h3>
-          <p className="text-xs text-muted-foreground">{book.author}</p>
-          <div className="flex w-full items-center gap-2 mt-1">
-            <div className="h-1.5 flex-1 rounded-full bg-muted">
-              <div
-                className="h-full rounded-full bg-primary transition-all"
-                style={{ width: `${percent}%` }}
-              />
+      <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
+        {entries.map(({ entry, book }) => (
+          <button
+            key={book!.id}
+            onClick={() => navigate(`/read/${book!.id}`)}
+            className="group relative flex w-36 flex-shrink-0 flex-col items-center gap-2 rounded-2xl border border-border/50 bg-card p-3 shadow-sm transition-all hover:shadow-md hover:border-primary/20"
+          >
+            {/* Return to shelf / dismiss */}
+            <span
+              onClick={(ev) => handleRemove(book!.id, ev)}
+              title="Return to shelf"
+              className="absolute top-1.5 right-1.5 rounded-full bg-muted/80 p-0.5 opacity-0 transition-opacity group-hover:opacity-100"
+            >
+              <X className="h-3.5 w-3.5 text-muted-foreground" />
+            </span>
+
+            <div className="h-20 w-14 overflow-hidden rounded-lg bg-muted flex-shrink-0">
+              {book!.coverImage && (
+                <img src={book!.coverImage} alt={book!.title} className="h-full w-full object-cover" />
+              )}
             </div>
-            <span className="text-xs font-medium text-muted-foreground">{percent}%</span>
-          </div>
-          <span className="text-[11px] text-muted-foreground">
-            Page {lastProgress.lastPage} of {lastProgress.totalPages}
-          </span>
-        </div>
-        <BookOpen className="h-5 w-5 text-primary/60 flex-shrink-0" />
-      </button>
+            <div className="w-full text-center min-w-0">
+              <p className="text-xs font-semibold text-foreground line-clamp-2 leading-tight">{book!.title}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{book!.author}</p>
+            </div>
+            <BookOpen className="h-3.5 w-3.5 text-primary/50" />
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
